@@ -1,0 +1,12 @@
+loop_id;module;function_name;source_info;level;time_p;time_s;time_s_min;time_s_avg;time_s_max;cov_deviation;nb_threads;
+2;binary;main;baseline.c:8-12;Innermost;52.12;0.11;;;;;;
+3;binary;main;baseline.c:16-17;Innermost;27.41;0.06;;;;;;
+4;binary;main;baseline.c:8-10;Innermost;9.27;0.02;;;;;;
+13;binary;main;driver.c:24-25;Innermost;1.54;0;;;;;;
+6;binary;main;baseline.c:8-12;Innermost;1.16;0;;;;;;
+7;binary;main;baseline.c:16-17;Innermost;0.77;0;;;;;;
+12;binary;main;driver.c:24-25;Innermost;0.39;0;;;;;;
+11;binary;main;baseline.c:8-10;Innermost;0.39;0;;;;;;
+9;binary;main;baseline.c:8-12;Innermost;0.39;0;;;;;;
+8;binary;main;baseline.c:8-10;Innermost;0.39;0;;;;;;
+1;binary;main;driver.c:65-65,baseline.c:8-17;InBetween;0.39;0;;;;;;

@@ -1,0 +1,18 @@
+./maqao.intel64.2.12.0/maqao.intel64 oneview -R1 -c=config.lua -xp=maqoaTest
+chromium /home/tfeil/Bureau/IATIC4/S8/AOA/projet/maqoaTest/RESULTS//baseline_one_html/index.html
+
+ 
+ 1646  gcc -Wall -g -O3  -o out driver.c  
+
+ ./out 30000 100 300
+ 
+ 
+ https://www.tutorialspoint.com/c_standard_library/c_function_qsort.htm
+ 
+ ./maqao.intel64.2.12.0/maqao.intel64 oneview -R1 binary=baseline run_command="<binary> 300 100 30"
+ 
+ ./maqao.intel64.2.13.2/maqao.intel64 oneview -R1 binary=baseline run_command="<binary> 300 100 30" -xp=maqoaTest
+
+
+
+

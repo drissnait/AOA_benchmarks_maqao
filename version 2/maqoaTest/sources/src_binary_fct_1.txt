@@ -1,0 +1,71 @@
+/home/tfeil/Bureau/IATIC4/S8/AOA/projet/driver.c: 22 - 81
+--------------------------------------------------------------------------------
+
+22: 	srand(time(NULL));
+23: 	int i;
+24:     for(i = 0; i<N; i++)
+25:        tab[i] = rand() % 10;
+26: }
+27: 
+28: int main(int argc, char *argv[])
+29: {	
+30: 	
+31: 	/* check command line arguments */
+32:    if (argc != 4) {
+33:       fprintf (stderr, "Usage: %s <size> <nb warmup repets> <nb measure repets>\n", argv[0]);
+34:       abort();
+[...]
+44:    for (m=0; m<NB_METAS; m++) {
+45:       /* allocation mémoire des tableaux */
+46:       float *a = malloc (size * size * sizeof(float));
+47:       float *b = malloc (size * size * sizeof(float));
+48:       float *c = malloc (size * size * sizeof(float));
+[...]
+55:       if (m == 0) {
+56:          for (i=0; i<repw; i++)
+[...]
+65:       for (i=0; i<repm; i++)
+66:          baseline (size ,a,b,c);
+67:       uint64_t t2 = rdtsc();
+68: 
+69:       /* print performance */
+70:       printf ("%.2f cycles/element\n", (t2 - t1) / ((float) size * repm ));
+71: 
+72: 
+73:       /* free arrays */
+74:       free (a);
+75:       free (b);
+76:       free (c);
+77:       
+78:   }
+79: 	
+80: 	return 0;
+81: }
+/usr/include/stdlib.h: 363 - 363
+--------------------------------------------------------------------------------
+
+363:   return (int) strtol (__nptr, (char **) NULL, 10);
+/home/tfeil/Bureau/IATIC4/S8/AOA/projet/rdtsc.c: 12 - 13
+--------------------------------------------------------------------------------
+
+12:    __asm__ volatile ("rdtsc" : "=a" (a), "=d" (d));
+13:    return (d<<32) | a;
+/usr/include/x86_64-linux-gnu/bits/stdio2.h: 100 - 107
+--------------------------------------------------------------------------------
+
+100:   return __fprintf_chk (__stream, __USE_FORTIFY_LEVEL - 1, __fmt,
+[...]
+107:   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
+/home/tfeil/Bureau/IATIC4/S8/AOA/projet/baseline.c: 8 - 17
+--------------------------------------------------------------------------------
+
+8: 	for ( i =0; i < n ; i ++) {
+9: 		if ( i < n /3)
+10: 			c [ i ] = a [ i ] * b [ i ];
+11: 		else
+12: 			c [ i ] = a [ i ] - b [ i ];
+13: 	}
+14: 	
+15: 	
+16: 	for ( i =1; i < n ; i ++)
+17: 		c [ i ] *= 2;

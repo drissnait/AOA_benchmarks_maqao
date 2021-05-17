@@ -1,0 +1,5 @@
+Node;Process;Thread;System (%);Binary (%);Time (s);Math (%);OMP (%);String (%);Others (%);IO (%);Memory (%);MPI (%);Pthread (%);
+_ALL;_ALL;_ALL;5.02;94.98;0.21;0;0;0;0;0;0;0;0;
+SidiTfeil;_ALL;_ALL;5.02;94.98;0.21;0;0;0;0;0;0;0;0;
+SidiTfeil;39468;_ALL;5.02;94.98;0.21;0;0;0;0;0;0;0;0;
+SidiTfeil;39468;39468;5.02;94.98;0.21;0;0;0;0;0;0;0;0;

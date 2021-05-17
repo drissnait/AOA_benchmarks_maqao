@@ -1,0 +1,362 @@
+.\" File generated using by MAQAO.
+.TH MAQAO-ONEVIEW "1" "2020/12/03" "MAQAO-ONEVIEW 2.12.0" "User Commands"
+.SH NAME
+maqao-oneview \- manual page for maqao oneview module.
+.SH SYNOPSIS
+maqao oneview --create-report=<report> --config=<configuration file>
+.SH DESCRIPTION
+ONE-View drives the execution of other MAQAO modules (LProf, CQA ...)and generates reports aggregating their analysis results.
+.SH OPTIONS
+.SH "    OPTIONS TO GENERATE REPORTS"
+.TP
+\fB\-\-create-report\fR\=<report>
+Create a report and run all needed steps (including dynamic steps).  Available values are: 
+.TP 20 
+\fB       one\fR 
+A first view of the application based on a dynamic profiling and a  static analysis of innermost loops. Can be generated using option -R1 instead of--create-report=one
+.
+.SH ""
+.TP
+\fB\-c\fR, \fB\-\-config\fR\=<file>
+Specify the path of a configuration file.
+.TP
+\fB\-xp\fR, \fB\-\-experiment-path\fR\=<path>
+Specify the path of an experiment directory.
+.TP
+\fB\-\-force-all-loops\fR
+ONE-View does not analyze loops without debug data. This option forces the analysis of all loops, even if they have no debug data. Filters are still applied.
+.TP
+\fB\-\-force-static-analysis\fR
+ONE-View saves various data in files in order to regenerate reports quicker. This option prevents ONE-View to use these files and generate them again.
+.TP
+\fB\-\-force-decan-analysis\fR
+ONE-View saves various data in order to not run DECAN twice as it takes time. This option force ONE-View to generate all DECAN data again.
+.TP
+\fB\-\-text-global\fR[\=on/off]
+If the option is equals to "on", the "global" section is displayed. Else if the option is equals to "off", the section is not displayed.
+.TP
+\fB\-\-text-application\fR[\=on/off]
+If the option is equals to "on", the "application" section is displayed. Else if the option is equals to "off", the section is not displayed.
+.TP
+\fB\-\-text-functions\fR[\=on/off]
+If the option is equals to "on", the "functions" section is displayed. Else if the option is equals to "off", the section is not displayed.
+.TP
+\fB\-\-text-functions-full\fR[\=on/off]
+If the option is equals to "on", all data of the "functions" section are displayed. Else if the option is equals to "off", the section is not displayed.
+.TP
+\fB\-\-text-loops\fR[\=on/off]
+If the option is equals to "on", the "loops" section is displayed. Else if the option is equals to "off", the section is not displayed.
+.TP
+\fB\-\-text-loops-full\fR[\=on/off]
+If the option is equals to "on", all data of the "loops" section are displayed. Else if the option is equals to "off", the section is not displayed.
+.TP
+\fB\-\-text-cqa\fR[\=on/off/<loops>]
+When text report is displayed, print the "cqa" section. If the parameter  is equal to "on" (default), CQA section is displayed. If it is equal to "off" the CQA section is not displayed. Else, the parameter <loops> describes a set of loops to analyze using CQA. It must have the following format: [<module>:]<id>,[<module>:]<id> where <module> represents the binary object containing the loop. "binary" can be used to refer to the main binary and is the default value, else it must be an entry inserted into external_libraries. <id> is the MAQAO loop identifier. If <loops> is not defined, the ten hottest loops are analyzed.
+.TP
+\fB\-\-text-cqa-full\fR[\=on/off/<loops>]
+When text report is displayed, print all data from the "cqa" section. If the parameter  is equal to "on" (default), CQA section is displayed. If it is equal to "off" the CQA section is not displayed. Else, the parameter <loops> describes a set of loops to analyze using CQA. It must have the following format: [<module>:]<id>,[<module>:]<id> where <module> represents the binary object containing the loop. "binary" can be used to refer to the main binary and is the default value, else it must be an entry inserted into external_libraries. <id> is the MAQAO loop identifier. If <loops> is not defined, the ten hottest loops are analyzed.
+.TP
+\fB\-of\fR, \fB\-\-output-format\fR\=<format>
+Specify the format of generated reports. Several values can be specified using comas Available values are: 
+.TP 20 
+\fB       all\fR 
+All format. Generate report in each available format.
+.TP 20 
+\fB       html\fR  (default)
+html format. Generate a directory containing html files. The main page is index.html.
+.TP 20 
+\fB       xlsx\fR 
+XLSX format. Generate a .xlsx file.
+.TP 20 
+\fB       text\fR 
+Text format. Display the report on current terminal. Options text-... can be used to customize the report.
+.
+.SH ""
+.TP
+\fB\-\-replace\fR
+When an experiment directory is passed, ONE-View does not reuse existing data. This option remove the experiment directory if it exists to be sure new data are produced.
+.TP
+\fB\-\-show-program-output\fR[\=on/off]
+If the option is equal to "on", program output is printed on the standart output, else it is printed in a file in logs subdirectory (default). If the option is used without parameters, it is considered as 'on'.
+.TP
+\fB\-WS\fR, \fB\-\-with-scalability\fR[\=<mode>]
+Run the scalability analysis. A report level must be used using --create-report Available values are: 
+.TP 20 
+\fB       on\fR  (default)
+Run the scalability analysis. Efficiency formula is Eff = Time (<ref>) / (Time (<run>) * nb_threads) with <ref> the run with parameters described in the configuration file and <run> a run described by the parameter multiruns_params.
+.TP 20 
+\fB       off\fR 
+Does not run the scalability analysis
+.TP 20 
+\fB       weak\fR 
+Run the scalability analysis but use a different formula for efficiency: Eff = Time (<ref>) / Time (<run>) with <ref> the run with parameters described in the configuration file and <run> a run described by the parameter multiruns_params.
+.
+.SH ""
+.TP
+\fB\-WC\fR, \fB\-\-with-compare\fR[\=<mode>]
+Run the compare analysis. A report level must be used using --create-report. Experiments are described by parameter multiruns_params  Available values are: 
+.TP 20 
+\fB       on\fR  (default)
+Run the compare analysis.
+.TP 20 
+\fB       off\fR 
+Does not run the compare analysis
+.
+.SH ""
+.SH "    CONFIGURATION OPTIONS"
+.TP
+\fB\-\-batch-command\fR\=<cmd>
+Specify how to submit a job to job scheduler. The script must be replaced by <batch_script> Example: sbatch <batch_script>
+.TP
+\fB\-\-batch-script\fR\=<script>
+Specify the job scheduler script <script> to use. It must be a specific version where some values must be replaced by substrings and the corresponding options must be used:   * the application executable and its arguments must be replaced by <run_command>   * the number of processes to use must be replaced by <number_processes>   * the number of nodes to use must be replaced by <number_nodes>   * the number of tasks per nodes to use must be replaced by <number_tasks_nodes> Other user defined variables can be replaced if they are defined in the script-variables table. User defined variables must be defined between <> symboles.
+.TP
+\fB\-\-binary\fR\=<bin>
+Specify the application <bin> to analyze.
+.TP
+\fB\-\-cqa-params\fR\=<table>
+Specify additional parameters passed to CQA. It must be a string representing a Lua table where each entry is a CQA option.
+.TP
+\fB\-\-custom-categories\fR\=<table>
+Specify custom categories to analyze using LPROF results. The default value is to have one category for each entry in external-libraries. If the table is filled by the user, only categories specified in the table are analyzed. Custom categories are represented by a Lua table where each entry is a custom category. A custom category is described in a subtable with following fields:   * type - "library" (the custom category is a single library), "all-external-libraries" (shortcut to get            one category for each entry in external-libraries as done by default), "library_group" to            accumulate several libraries into a single category   * value - "<library name>" when type is "library", nil when type is "all-external-libraries",            {"lib1.so", "lib2.so"} when type is "library_group"   * name - Used only when type is "library_group", specify the name of the group Example: "{{type = "library", value = "lib1.so"}, {type = "all-external-libraries"}}" Example: "{{type = "library_group", value = {"lib1.so", "lib2.so"}, name = "my_libs"}}" /!\ Warning /!\ If a single library is used in several library groups, some errors will appear in reports
+.TP
+\fB\-\-dataset\fR\=<dir>
+Specify the path of the directory <dir> containing the application dataset. The directory is copied / linked into the experiment directory, according to dataset-handler value. This parameter is needed when the application needs external files.
+.TP
+\fB\-\-dataset-handler\fR\=<handler>
+Specify how the dataset directory is handled. Available values are: 
+.TP 20 
+\fB       link\fR  (default)
+A link is created from the experiment directory to the specified dataset directory
+.TP 20 
+\fB       copy\fR 
+The specified dataset directory is fully copied into the dataset directory
+.
+.SH ""
+.TP
+\fB\-\-environment-variables\fR\=<table>
+Specify some environment variables to set before running the application. <table> contains one subtable per environment variable with fields:  * name  - Name of the environment variable.  * value - Value of the environment variable.
+.TP
+\fB\-\-excluded-areas\fR\=<table>
+Specify areas (loops or blocks) to do not analyze. It must be a string representing a Lua table describing a list of areas to ignore using following fields:   * type - "loop" or "block", the type of area to ignore;   * id - a number representing the MAQAO identifier of the area to ignore;   * module - a string representing the binary object containing the area. "binary" is the area   is in the main binary or the name of an object listed in external-libraries. Example: "{{type = "loop", id = 5, module = "binary"},{type = "loop", id = 10, module = "lib1.so"}} 
+.TP
+\fB\-\-external-libraries\fR\=<table>
+Specify dynamic libraries to analyze. It must be a string representing a Lua table where each entry is a string with the library name. Example: "{"lib1.so", "lib2.so"}"
+.TP
+\fB\-\-experiment-name\fR\=<name>
+Specify a string copied in report summary that can be used to easily distinguish various reports.
+.TP
+\fB\-\-filter\fR\=<table>
+Specify a filter used to select which loops are dynamically analyzed. It must be a string representing a Lua table describing the filter using two fields:   * type - "number" to give a number of loop to analyze, "coverage" to analyze all loops     whose coverage is greater than a given value, "cumulated_coverage" to analyze loops while the     cumulated coverage is lower than a given value, "all" to analyze all loops (default)   * value - the number associated to type Default value in {type="number", value = 10} which dynamically analyze the then hottest loops.
+.TP
+\fB\-\-filter-decan\fR\=<table>
+Specify a filter used to select which loops are analyzedby DECAN. The parameter has the same structure than the one described in --filter option
+.TP
+\fB\-\-included-areas\fR\=<table>
+Specify areas (loops or blocks) to analyze even if it doesn't match the filter. It must be a string representing a Lua table describing a list of areas to include using following fields:   * type - "loop" or "block", the type of area to include;   * id - a number representing the MAQAO identifier of the area to include;   * module - a string representing the binary object containing the area. "binary" is the area   is in the main binary or the name of an object listed in external-libraries. Example: "{{type = "loop", id = 5, module = "binary"},{type = "loop", id = 10, module = "lib1.so"}} 
+.TP
+\fB\-\-keep-binary-location\fR\=<boolean>
+Specify if the binary should move in the experiment directory or stay only on local system. Default behevior is to copy the binary in the experiment directory (--keep-binary-location=false). If set to true, the binary will stay at its location
+.TP
+\fB\-\-lprof-params\fR\=<opts>
+Specify additional parameters passed to LPROF.
+.TP
+\fB\-\-lprof-post-process-params\fR\=<table>
+Specify additional parameters passed to LPROF for its post processing phase. It must be a string representing a Lua table where each entry is a LPROF option.
+.TP
+\fB\-\-maximal-path-number\fR\=<nb>
+Maximal number of paths a loop can have to be analyzed.
+.TP
+\fB\-\-mpi-command\fR\=<cmd>
+Specify how the MPI runtime must be run. Some values must be replaced by substrings  and the corresponding option must be used:   * the number of processes must be replaced by <number_processes>. Example: "mpirun -n <number_processes>"
+.TP
+\fB\-\-multiruns-params\fR\=<table>
+Specify experiments to analyze for scalability report. <table> contains one subtable per experiment with fields:  * number_processes - Number of processes to use.  * omp_num_threads - Number of threads to use.  * number_nodes - Number of nodes to use.  * number_tasks_nodes - Number of tasks per node to use.  * run_command - Command to use with its parameters. Use same format than run-command option.  * mpi_command - Command to use to run MPI. Use same format than mpi-command option.  * dataset - Path to a specific directory. Use same format than dataset option.  * run_directory - Path to a directory from where to run the application. Use same format than run-directory option.  * script_variables - A table with user defined variables. Use same format than script-variables option.  * profile_start - A table describing when the profiling should start.  * name - Name of the run that will be used in reports
+.TP
+\fB\-\-number-nodes\fR\=<nb>
+Specify the number of nodes <nb> to use to run the application. The value must  be refered as <number_nodes> in option mpi-command and in the batch script is used.
+.TP
+\fB\-\-number-processes\fR\=<nb>
+Specify the number of processes <nb> to use to run the application. The value must  be refered as <number_processes> in option mpi-command and in the batch script is used.
+.TP
+\fB\-\-number-tasks-nodes\fR\=<nb>
+Specify the number of tasks per node <nb> to use to run the application. The value must  be refered as <number_tasks_nodes> in option mpi-command and in the batch script is used.
+.TP
+\fB\-\-object_coverage_threshold\fR\=<nb>
+Specify a threshold to apply to objects coverages (loops anf functions) to include them in static analysis. All objects whose coverage is lower than the given value <nb> will not be statically and dynamically analized
+.TP
+\fB\-\-omp-num-threads\fR\=<nb>
+Specify the corresponding OpenMP variable value. It is automaticaly set by ONE-View before runs.
+.TP
+\fB\-\-pinning_command\fR\=<cmd>
+Specify parameters used to pin the process. If used, <cmd> will be appending before the call to MAQAO.
+.TP
+\fB\-\-profile-start\fR\=<table>
+Specify when the profiling of the application must started. It must be a string representing a Lua table describing the filter using two fields:   * unit - "none" to start the profiling at the application start, "s" to wait a number of seconds   before starting the profiling, "p" to wait a percentage of the application time before starting   the profiling.   * value - the number associated to unit.
+.TP
+\fB\-\-qplot_path\fR\=<dir>
+Specify the path of QPlot directory containing the file parse.js. Qplot is run with the command nodejs <dir>/parse.js <oneview-report.xlsx>.
+.TP
+\fB\-\-run-command\fR\=<cmd>
+Specify how the application must be run. The application must be replaced by  the substring <binary>. Example: "<binary> --opt=val -a 2"
+.TP
+\fB\-\-run-directory\fR\=<dir>
+Specify the directory where the application must be run. The dataset directory must be refered as <dataset>. It is needed when the application must be run in a specific subdirectory located in the dataset directory. Example: "<dataset>/Run"
+.TP
+\fB\-\-script-variables\fR\=<table>
+Specify custom variables replaced in batch-script file. Each entry has for key the variable name and for value a string or a number that will replace the tag (<key>) in the script file.
+.TP
+\fB\-\-scalability-reference\fR\=<value>
+Specify which run will be used as reference when scalability reports are generated. If two entries match the filter, the first one described is used as refences (main entry, then the entry with the lowest index in multirun-params table). Availables values are: Available values are: 
+.TP 20 
+\fB       main\fR  (default)
+Uses the run specified by main parameters (and not in multirun-params) as reference
+.TP 20 
+\fB       lowest-time\fR 
+Uses the shortest run in time as reference
+.TP 20 
+\fB       highest-time\fR 
+Uses the longest run in time as reference
+.TP 20 
+\fB       lowest-threads\fR 
+Uses the run with the lowest number of threads analyzed using LPROF as reference
+.TP 20 
+\fB       highest-threads\fR 
+Uses the run with the highest number of threads analyzed using LPROF as reference
+.TP 20 
+\fB       lowest-efficiency\fR 
+Uses the run with the worst efficiency as reference
+.TP 20 
+\fB       highest-efficiency\fR 
+Uses the run with the better efficiency as reference
+.TP 20 
+\fB       <number>\fR 
+Uses the entry at index <number> in the multirun-param table as reference.
+.
+.SH ""
+.TP
+\fB\-\-source-code-location\fR\=<dir>
+Specify the directory <dir> containing the source code. It is necessary if the source code is not located in the directory specified in debug data. <dir> last subdirectory must be included in source location extracted from debug data.
+.TP
+\fB\-\-thread-filter-threshold\fR\=<nb> <unit>
+Specify a threshold to apply to threads to consider them as valid threads and use them in reports. Value is a string composed of a number and an unit: s for seconds and % for percentage of the total walltime (default unit). For example "5s" or "20%". Some runtimes create additional threads to handle specific tasks but that leads to wrong parallel reports.
+.SH "    REPORT COMPARISON OPTIONS"
+.TP
+\fB\-\-compare-reports\fR
+Create a new HTML report that compare existing reports already produced. The new report nam can be specified using option --experiment-path.
+.TP
+\fB\-\-inputs\fR\=<list>
+A list of reports to compare, separated by a coma.
+.SH "    OTHER ONEVIEW OPTIONS"
+.TP
+\fB\-\-create-config\fR\=<file>
+Create an empty template of configuration file. If <file> is not specified, a file called config.lua is created in the current directory.
+.TP
+\fB\-\-create-custom-report\fR\=<name>
+Create an empty template of custom report file located in $HOME/.maqao/OV_reports. The file is called <name>.lua and described a custom report as a Lua table. It can be updated to adapt the report to your needs.
+.TP
+\fB\-\-list-reports\fR
+List all available report names (built-in and custom)
+.TP
+\fB\-\-help-lprof-probes\fR
+Show help about how to use LPROF probes to trigger / stop profiling at source level.
+.SH "    MAN PAGE"
+.TP
+\fB\-\-generate-man\fR
+Generate the man page of the module based on the module help in the current directory. The generated file is called maqao-<module>.1. Once the man page is generated, the program exits.
+.TP
+\fB\-\-output\fR\=<path>
+Specify the path where the man page is generated.
+.TP
+\fB\-\-generate-wiki\fR
+Generate the wiki page of the module based on the module help on the standard output. Once the man page is generated, the program exits.
+.SH "    OPTIONAL FLAGS COMMON TO ALL MODULES"
+.TP
+\fB\-\-disable-debug\fR
+Disable debug data loading. WARNING, this option may alter the tool's accuracy.
+.TP
+\fB\-\-compiler\fR\=<compiler>
+Select the compiler used to create the binary. Available values are: 
+GNU, Intel.
+
+.TP
+\fB\-\-language\fR\=<language>
+Select the source language. Available values are: 
+c, c++, fortran.
+
+.TP
+\fB\-\-lcore-flow-all\fR
+Analyze all instructions returned by MADRAS. Default behaviour is to analyze instructions from sections .text, .init, .fini and .madras.code. 
+.TP
+\fB\-\-uarch\fR\=<uarch>
+Select the micro architecture used for analysis. Available values are: 
+.TP 20 
+\fB       For x86_64 architecture:\fR 
+CORE (CORE2_65), ENHANCED_CORE (CORE2_45), NEHALEM (NHM), WESTMERE, SANDY_BRIDGE (SNB), IVY_BRIDGE (IVB),             IVY_BRIDGE_E (IVBE), HASWELL (HWL), BROADWELL (BWL), SKYLAKE, HASWELL_E (HWLE), KNIGHTS_LANDING (KNL),             KABY_LAKE, ZEN_V1 (ZEN), ZEN_PLUS (ZEN+), ZEN_V2 (ZEN2)
+.
+.SH ""
+.TP
+\fB\-\-proc\fR\=<proc>
+Select the processor model used for analysis. maqao --list-procs to display supported processors
+.TP
+\fB\-ifr\fR, \fB\-\-interleaved-functions-recognition\fR\=<mode>
+Select the mode of interleaved functions recognition. Available values are: 
+.TP 20 
+\fB       off\fR 
+Functions are not extracted from connected components.
+.TP 20 
+\fB       debug_based\fR  (default)
+Functions are extracted from connected components matching with debug data.
+.TP 20 
+\fB       all\fR 
+All connected components are extracted into new functions whether they correspond to the debug information or not.
+.
+.SH ""
+.TP
+\fB\-dbg\fR, \fB\-\-debug\fR[\=<level>]
+Enable debug messages. <level> can be used to specify the level of debug messages to display. Available values are: 
+0, 1 (default).
+
+.TP
+\fB\-\-\fR
+Specify binary parameters for dynamic analysis. Next options are ignored by MAQAO.
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print the current help.
+.TP
+\fB\-v\fR, \fB\-\-version\fR
+Print the current version.
+.SH EXAMPLES
+.TP
+maqao oneview --create-config 
+Create a configuration file template called config.lua in current directory. This file should be filed using experiment parameters. 
+.TP
+maqao oneview --create-report=<format> --config=<config.lua> [--experiment-path=<dir>]
+Generate the experiment directory and reports. The application will be run at least once so the environment must be set before. To check if the environment is set, just check if your application can be ran and if MAQAO runtimes libraries are in LD_LIBRARY path (libdecanrt.so and libprof.so). <config.lua> is a filled  configuration file based on the template created with --create-config. If <dir> is specified, it will be used as experiment directory name. If the directory already exists, all files created to generate the new report will be located into this directory. Reports are created into the subdirectory RESULTS/ . 
+.TP
+maqao oneview --create-report=one -c=./config.lua -xp=./exp_oneview
+Generate the experiment directory ./exp_oneview then create the report ONE in .html format located in ./exp_oneview/RESULTS/ . 
+.TP
+maqao oneview --create-report=one --output-format=all --binary=./my_app --dataset=./data
+Generate the experiment directory and reports ONE in all available format using the binary ./my_app and the dataset directory ./data . 
+.TP
+maqao oneview --create-report=one --binary=./my_app --dataset=./data --run-directory='<dataset>/run'
+Generate report one for an application called 'my_app' that need data located in a directory called 'data' in the current directory. The application must be run from a directory called 'run' in the './data' directory. 
+.SH AUTHOR
+Written by The MAQAO team.
+.SH "REPORTING BUGS"
+Report bugs to <contact@maqao.org>.
+.SH COPYRIGHT
+MAQAO (C), 2004-2020 Universite de Versailles Saint-Quentin-en-Yvelines (UVSQ), 
+is distributed under the GNU Lesser General Public License (GNU LGPL). MAQAO is 
+free software; you can use it under the terms of the GNU Lesser General 
+Public License as published by the Free Software Foundation; either version 2.1 
+of the License, or (at your option) any later version. This software is distributed 
+in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the 
+implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+GNU Lesser General Public License for more details.
+
+The full legal text of the GNU Lesser General Public License (GNU LGPL) is available
+at http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+.SH "SEE ALSO"
+maqao(1), maqao-madras(1), maqao-disass(1), maqao-cqa(1), maqao-analyze(1), maqao-mil2(1), maqao-mil(1), maqao-lprof(1)

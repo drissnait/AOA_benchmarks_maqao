@@ -1,0 +1,346 @@
+.\" File generated using by MAQAO.
+.TH MAQAO-LPROF "1" "2020/12/03" "MAQAO-LPROF 2.12.0" "User Commands"
+.SH NAME
+maqao-lprof \- manual page for maqao lprof module.
+.SH SYNOPSIS
+
+.br
+	Data collection mode : maqao lprof [options] -- <APPLICATION> [arguments, if any]
+.br
+	Data display mode    : maqao lprof -xp=<EXPERIMENT_DIRECTORY> [--display-functions | --display-loops | --display-blocks ] [options]
+.SH DESCRIPTION
+
+.br
+The MAQAO Lightweight Profiler (LProf) allows profiling of target applications to detect hot functions and loops in 2 steps.
+.br
+	1) Data collection (sampling)
+.br
+	2) Data display
+.SH OPTIONS
+.TP
+\fB\-xp=\fR, \fB\-\-experiment-path\fR\=<path>
+Experiment directory where the collected data is stored. It is generated in the current directory during data collection step. 
+.br
+If not specified, a default pattern will be used: maqao_lprof_YYYY-MM-DD-hh-mm-ss. 
+.br
+Y: year, M: month, D: day, h: hour, m: minute, s: second. 
+.br
+/!\ Warning: at display, this directory is used to load the collected data and is a mandatory parameter.
+.SH "    DATA COLLECTION (MAIN OPTIONS)"
+.TP
+\fB\-\-include-kernel\fR
+No effect with --use-interrupt-engine. Count kernel samples.
+.TP
+\fB\-mc=\fR, \fB\-\-mpi-command\fR\=<MPI command>
+MPI command used to interactively run application. LProf prepends this to application command. When combined with batch-script, substitutes <mpi_command> in job script
+.TP
+\fB\-bs=\fR, \fB\-\-batch-script\fR\=<path to batch script>
+Batch script used to run application. LProf submits this file to <batch-command>. In this script, replace application run command with "<run_command>".
+.TP
+\fB\-bc=\fR, \fB\-\-batch-command\fR\=<batch submission command>
+Tell LProf how to submit <batch-script>. If omitted, guessed from <batch-script> extension.
+.TP
+\fB\-\-stdin-path\fR\=<path to a stdin-redirection file>
+Defines a file for redirection to stdin.
+.TP
+\fB\-\-sampling-rate\fR\=lowest/low/medium/high/highest
+Change the sampling rate (collected samples per second). 
+.br
+Five rates are available depending on the execution time of the application: 
+.br
+  - highest (2000 Hz): a few seconds 
+.br
+  - high    (1000 Hz): less than 1 min (HW events default) 
+.br
+  - medium  ( 200 Hz): few minutes (interrupt engine default) 
+.br
+  - low     (  50 Hz): less than 1 hour 
+.br
+  - lowest  (  10 Hz): over 1 hour
+.TP
+\fB\-ldi=\fR, \fB\-\-library-debug-info\fR\=<list>/on/off
+Analyze libraries debug information to locate loops with the --display-loops option, and also retrieve inlined library functions. 
+.br
+Libraries need to be compiled with the -g option. 
+.br
+Allowed values are: 
+.br
+  - "lib1.so, lib2.so, ..." : Get loops information only for libraries in the list. Use names as displayed by ldd <application executable>. 
+.br
+  - on                      : Get loops information for all libraries. 
+.br
+  - off                     : Get only functions information using ELF information for all libraries (default). 
+.br
+
+.br
+/!\ Warning: this option can increase the analysis overhead.
+.TP
+\fB\-ug=\fR, \fB\-\-user-guided\fR\=<delay (seconds)> (timer mode) / on (signal mode)
+Allow user to control the sampling in two modes: 
+.br
+  - timer mode  : user-defined delay (in seconds) before the data collection process. 
+.br
+                  May be useful to ignore the initialization step of an application. 
+.br
+  - signal mode : use SIGTSTP signal (CTRL+Z) to pause/resume the data collection process 
+.br
+                  Can be used as many times as necessary during the run of the application.
+.TP
+\fB\-btm=\fR, \fB\-\-backtrace-mode\fR\=fp/stack/branch/off
+[Advanced] Select backtraces (callchains) collection method: 
+.br
+  - fp     : native, frame-pointer based, perf-events method (default). 
+.br
+             Requires compilation with -fno-omit-frame-pointer. 
+.br
+  - stack  : user stack unwinding (since Linux 3.7). 
+.br
+             Higher sampling overhead but no need to recompile. 
+.br
+  - branch : use hardware branch recording (since Linux 3.4). 
+.br
+             No need to recompile. In the current version, this will display the history of the last calls instead of the full callchain. 
+.br
+  - off    : disable backtraces collection. 
+.br
+             Reduces sampling overhead and experiment directory size but some 
+.br
+             OpenMP/MPI functions will no more be correctly categorized at display.
+.SH "    DATA COLLECTION (OTHER OPTIONS)"
+.TP
+\fB\-st=\fR, \fB\-\-sampler-threads\fR\="nprocs" or <integer>
+Number of threads to process records in ring buffers, to use with alternative/default engine (MAQAO version > 2.4).
+.TP
+\fB\-\-use-OS-timers\fR
+Use OS timers instead of hardware events. Needed in case of unavailable HW counters or undetected processor.
+.TP
+\fB\-cd=\fR, \fB\-\-check-directory\fR\=on/off
+Disable checking if the specified experiment directory already exists. 
+.br
+By default, a check is always performed to avoid modifying an existing experiment directory.
+.TP
+\fB\-\-maximum-buffer-megabytes\fR\=<integer>
+Limit RAM usage during samples collection to X Megabytes. Default is 1024 (1 GB).
+.TP
+\fB\-\-tmpfiles-buffer-megabytes\fR\=<integer>
+Limit RAM used for dumping samples to temp. files to X Megabytes. Default is 20 MB. Cannot be greater than maximum-tmpfiles-megabytes.
+.TP
+\fB\-\-maximum-tmpfiles-megabytes\fR\=<integer>
+Limit total temporary files size during samples collection to X Megabytes. Default is 1024 (1 GB). Cannot be lower than tmpfiles-buffer-megabytes.
+.TP
+\fB\-hwc=\fR, \fB\-\-hardware-counters\fR\=<list>
+Provide a custom list of hardware counters to profile. 
+.br
+For each hardware counter, the threshold value should be set using format "@VALUE". 
+.br
+Raw codes can be used as well as hardware counter names. 
+.br
+ex: hwc=CPU_CLK_UNHALTED@1000000,0x412e@1000000,INST_RETIRED@500000
+.TP
+\fB\-p\fR, \fB\-\-evts-profiles\fR\=<string>
+Use ready-to-use lists of hardware events.
+.TP
+\fB\-\-stack-size\fR
+Size (in bytes) of stack to dump on samples (default: 4096).
+.TP
+\fB\-\-mmap-pages\fR
+Number of MMAP pages for ring buffer payload. Default: 64 (btm=stack) or 1.
+.TP
+\fB\-\-collect-calls-info\fR\=[on]/off
+Collects source file/line information for callchain nodes (calls). To display them, add --use-calls-info=on at display step.
+.TP
+\fB\-\-use-alternative-engine\fR
+Use alternative sampling engine (MAQAO version > 2.4). Should be used only when default engine is not behaving correctly. Supports only one lprof instance per node.
+.TP
+\fB\-\-use-interrupt-engine\fR
+Use perf-events free sampling engine. Only active/running time is accounted (excluding sleep/wait time) (to include sleep time, use --include-sleep-time) and callchains are not supported. Needed in case of unavailable perf-events.
+.TP
+\fB\-\-include-sleep-time\fR
+[interrupt-engine only] Include sleep time (walltime).
+.TP
+\fB\-\-keep-external-threads\fR\=on/[off]
+Profile threads with a different command line than the monitored application.
+.TP
+\fB\-\-keep-indirect-threads\fR\=[on]/off
+Profile threads that are not direct children of the monitored application.
+.TP
+\fB\-cpu=\fR, \fB\-\-cpu-list\fR\=<string>
+CPUs to use with alternative/default engine (MAQAO version > 2.4). Ex: 0,2 to use CPU0 and CPU2.
+.TP
+\fB\-\-ignore-signals\fR\=<comma-separated list of integers>
+Prevents signals from being interpreted as termination signals. Allows to adapt default and interrupt engines to various runtimes. Remark: for ignored signals also specified in set-exit-signals or set-abort-signals, evaluation order is set-abort-signals, set-exit-signals and then ignore-signals.
+.TP
+\fB\-\-set-exit-signals\fR\=<comma-separated list of integers>
+Interpret signals as normal application exit. Allows to adapt default and interrupt engines to various runtimes. Remark: for exit signals also specified in ignore-signals or set-abort-signals, evaluation order is set-abort-signals, set-exit-signals and then ignore-signals.
+.TP
+\fB\-\-set-abort-signals\fR\=<comma-separated list of integers>
+Interpret signals as abnormal application exit. Allows to adapt default and interrupt engines to various runtimes. Remark: for abort signals also specified in ignore-signals or set-exit-signals, evaluation order is set-abort-signals, set-exit-signals and then ignore-signals.
+.TP
+\fB\-\-force-base-frequency\fR\=<integer, MHz>
+Force the CPU base frequency in case of failed detection.
+.TP
+\fB\-\-async-tracer [EXPERIMENTAL]\fR
+Asynchronous (instead of synchronous) ptracing for default engine.
+.TP
+\fB\-\-legacy-maps\fR\=<positive integer> [ADVANCED]
+Use only if unknown functions coverage is high for executable or libraries. Collect maps via legacy method (out of perf-events) after <legacy-maps> milliseconds and fallback to them in case of unresolved addresses.
+.SH "    DATA DISPLAY (MAIN OPTIONS)"
+.TP
+\fB\-df\fR, \fB\-\-display-functions\fR
+Display the exclusive time spent in the aplication, libraries and system functions.
+.TP
+\fB\-dl\fR, \fB\-\-display-loops\fR
+Display the exclusive time spent in the application loops. 
+.br
+If used with library-debug-information option during the collection, library loops information will be displayed too.
+.TP
+\fB\-dn\fR, \fB\-\-display-nodes\fR
+Information is displayed at node-level. 
+.br
+The categorization table shows the time percentage for each of the categories below: 
+.br
+  - Application   : application executable. 
+.br
+  - MPI           : MPI runtime (openmpi, mpich, intel mpi,...). 
+.br
+  - OMP           : OpenMP runtime (gomp, iomp...). 
+.br
+  - Math          : Math libraries (libm, libmkl, libblas...). 
+.br
+  - System        : system interface (linux system calls). 
+.br
+  - Pthread       : Pthread runtime. 
+.br
+  - I/O           : I/O functions. 
+.br
+  - String        : string manipulation functions (strcpy, trim...). 
+.br
+  - Memory        : memory management functions (malloc, free...). 
+.br
+  - Others        : functions that are not of the categories above.
+.TP
+\fB\-dp\fR, \fB\-\-display-processes\fR
+Information is displayed at process-level. See display-nodes for categories.
+.TP
+\fB\-dt\fR, \fB\-\-display-threads\fR
+Information is displayed at thread-level. See display-nodes for categories.
+.TP
+\fB\-lec=\fR, \fB\-\-libraries-extra-categories\fR\=<comma-separated list>
+Consider specified libraries as extra categories. Use libraries names as given by 'ldd <application>'.
+.TP
+\fB\-of=\fR, \fB\-\-output-format\fR\=html/csv
+Output results in a file of the given format: 
+.br
+  - html : generate a web page in <PROFILING_DIRECTORY>/html directory. Open html/index.html in a web browser to view the results. 
+.br
+  - csv  : generate a csv file for each thread (default name: <CURRENT_DIRECTORY>/maqao_<NODE-NAME>_<THREAD-ID>.csv).
+.TP
+\fB\-cc\fR, \fB\-\-callchain\fR\=exe/lib/all/off
+Specify objects for callchains analysis: 
+.br
+  - exe: display the callchain (if available) for each function with a scope limited to the application. 
+.br
+  - lib: extend the callchain scope to external libraries function calls. 
+.br
+  - all: display the callchain with no limited scope (application + libraries + system calls). 
+.br
+  - off: disable callchains analysis. Some OpenMP/MPI functions/loops will no more be correctly categorized. Use this only when display takes too much time/memory.
+.TP
+\fB\-ct=\fR, \fB\-\-cumulative-threshold\fR\=<integer between 0 and 100>
+Display the top loops/functions which cumulative percentage is greater than the given value (e.g: ct=50).
+.SH "    DATA DISPLAY (OTHER OPTIONS)"
+.TP
+\fB\-op=\fR, \fB\-\-output-path [SHOULD BE USED WITH THE output-format OPTION]\fR\=<path>
+Specifiy the path of the generated results files.
+.TP
+\fB\-\-output-prefix [SHOULD BE USED WITH THE output-format OPTION]\fR\=<string>
+Add a custom prefix to the generated results files.
+.TP
+\fB\-\-show-full-paths\fR
+For module and source files, display full path instead of basename.
+.TP
+\fB\-\-use-calls-info\fR\=[on]/off
+Use source file/line information for callchain nodes (calls). At collect step, add --collect-calls-info=on.
+.TP
+\fB\-ssv=\fR, \fB\-\-show-samples-value\fR\=on/off (default)
+Display the number of samples collected (in between brackets).
+.TP
+\fB\-\-display-raw-events\fR
+Use raw event counts instead of default metrics (coverage, walltime...)
+.TP
+\fB\-fec=\fR, \fB\-\-functions-extra-categories\fR\=<comma-separated list>
+Consider specified groups of functions as extra categories. Applied after libraries-extra-categories Rule name (supported: mkl for Intel MKL functions).
+.TP
+\fB\-cwf=\fR, \fB\-\-callchain-weight-filter\fR\=<integer between 0 and 100>
+Filter callchains that don't represent at least X percent of time in the function reference
+.TP
+\fB\-\-thread-time-filter\fR\=<real number >= 0> (default = 0.01) [ADVANCED]
+During profile generation, ignore contribution from threads lasting less than X seconds. Use this option to control pollution from micro-threads, typically cloned by system ("<cmd>") calls.
+.TP
+\fB\-\-function-weight-filter\fR\=<real number between 0 and 100> [ADVANCED]
+During profile generation, ignore contribution from functions that represent less than X percent of thread time. Aggregated (e.g node level) contributions will consequently be slightly underestimated, especially with X > 0.1. Use this option to reduce memory footprint for wide workloads, during profile generation and display steps.
+.TP
+\fB\-\-loop-weight-filter\fR\=<real number between 0 and 100> [ADVANCED]
+Idem function-weight-filter but for loops.
+.TP
+\fB\-\-disable-kernel-merge\fR
+[ADVANCED] Disable symbols merging for kernels similar between nodes.
+.SH EXAMPLES
+.TP
+maqao lprof -- <APPLICATION>
+Launch the profiler in collect sampling mode on a sequential application. 
+.br
+It stores the results into a default experiment directory (maqao_lprof_YYYY-MM-DD-hh-mm-ss). 
+.br
+Y: year, M: month, D: day, h: hour, m: minute, s: second 
+.TP
+maqao lprof --mpi-command="mpirun -n 4" -- <APPLICATION>
+Same as previous example but for MPI application with 4 processes. 
+.TP
+maqao lprof -xp=<EXPERIMENT_DIRECTORY> [--mpi-command="mpirun -n 4"] -- <APPLICATION>  arg1 arg2 ...
+If the application needs one or more arguments, make sure to use the '--' delimiter. 
+.br
+Here, results are stored into the directory given by the user. 
+.TP
+maqao lprof -xp=<EXPERIMENT_DIRECTORY> -df
+Display the list of functions coming from the experiment directory into the terminal. 
+.br
+The function display mode allows to localized where are the hot functions of the application. 
+.TP
+maqao lprof -xp=<EXPERIMENT_DIRECTORY> -df -cc=exe
+Display the list of functions coming from the experiment directory into the terminal. 
+.br
+The -cc=exe (--callchain) option allows to display the callchains. 
+.br
+The function display mode allows to localized where are the hot functions of the application. 
+.TP
+maqao lprof -xp=<EXPERIMENT_DIRECTORY> -df -dt -of=csv -op=$PWD/help_example
+Generate a CSV file (-of=csv) for each thread (-dt) with the functions info (-df) into $PWD/help_example (-op=...). Specified directory for -op option must exist. If not, files will not be created. 
+.TP
+maqao lprof -xp=<EXPERIMENT_DIRECTORY> -dl
+Display the list of loops coming from the experiment directory into the terminal. 
+.br
+The loop display mode pinpoints hot loops in application. 
+.TP
+maqao lprof -xp=<EXPERIMENT_DIRECTORY> -of=html
+Generate the "html" directory into <EXPERIMENT_DIRECTORY>/html. 
+.br
+Open file <EXPERIMENT_DIRECTORY>/html/index.html in a web browser to view the results. 
+.SH AUTHOR
+Written by The MAQAO team.
+.SH "REPORTING BUGS"
+Report bugs to <contact@maqao.org>.
+.SH COPYRIGHT
+MAQAO (C), 2004-2020 Universite de Versailles Saint-Quentin-en-Yvelines (UVSQ), 
+is distributed under the GNU Lesser General Public License (GNU LGPL). MAQAO is 
+free software; you can use it under the terms of the GNU Lesser General 
+Public License as published by the Free Software Foundation; either version 2.1 
+of the License, or (at your option) any later version. This software is distributed 
+in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the 
+implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+GNU Lesser General Public License for more details.
+
+The full legal text of the GNU Lesser General Public License (GNU LGPL) is available
+at http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+.SH "SEE ALSO"
+maqao(1), maqao-madras(1), maqao-disass(1), maqao-cqa(1), maqao-oneview(1), maqao-analyze(1), maqao-mil2(1), maqao-mil(1)

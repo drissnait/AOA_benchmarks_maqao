@@ -1,0 +1,54 @@
+[MAQAO] PROCESS LAUNCHED (host SidiTfeil, process 39468)
+2.85 cycles/element
+1.80 cycles/element
+1.57 cycles/element
+1.60 cycles/element
+1.63 cycles/element
+1.63 cycles/element
+1.59 cycles/element
+1.58 cycles/element
+1.60 cycles/element
+1.59 cycles/element
+1.58 cycles/element
+1.60 cycles/element
+1.64 cycles/element
+1.60 cycles/element
+1.60 cycles/element
+1.59 cycles/element
+1.59 cycles/element
+1.58 cycles/element
+1.59 cycles/element
+1.61 cycles/element
+1.66 cycles/element
+1.70 cycles/element
+1.61 cycles/element
+1.62 cycles/element
+1.62 cycles/element
+1.59 cycles/element
+1.59 cycles/element
+1.58 cycles/element
+1.59 cycles/element
+1.58 cycles/element
+1.61 cycles/element
+[MAQAO] STOP PROFILING (host SidiTfeil, process 39468)
+[MAQAO] DUMPING SAMPLES (host SidiTfeil, process 39468)
+[MAQAO] FINISHED DUMPING SAMPLES (host SidiTfeil, process 39468)
+[MAQAO] DUMPING SOURCE INFO FOR CALLCHAIN NODES (host SidiTfeil, process 39468)
+[MAQAO] FINISHED DUMPING SOURCE INFO FOR CALLCHAIN NODES (host SidiTfeil, process 39468)
+[MAQAO] ANALYZING binary (host SidiTfeil)
+[MAQAO] binary (host SidiTfeil) DONE
+[MAQAO] Your experiment path is /home/tfeil/Bureau/IATIC4/S8/AOA/projet/maqoaTest/lprof_npsu/
+[MAQAO] To display your profiling results:
+#################################################################################################
+#    LEVEL    |     REPORT     |                            COMMAND                             #
+#################################################################################################
+#  Functions  |  Cluster-wide  |  maqao lprof -df xp=/home/tfeil/Bureau/IATIC4/S8/AOA/projet/m  #
+#  Functions  |  Per-node      |  maqao lprof -df -dn xp=/home/tfeil/Bureau/IATIC4/S8/AOA/proj  #
+#  Functions  |  Per-process   |  maqao lprof -df -dp xp=/home/tfeil/Bureau/IATIC4/S8/AOA/proj  #
+#  Functions  |  Per-thread    |  maqao lprof -df -dt xp=/home/tfeil/Bureau/IATIC4/S8/AOA/proj  #
+#  Loops      |  Cluster-wide  |  maqao lprof -dl xp=/home/tfeil/Bureau/IATIC4/S8/AOA/projet/m  #
+#  Loops      |  Per-node      |  maqao lprof -dl -dn xp=/home/tfeil/Bureau/IATIC4/S8/AOA/proj  #
+#  Loops      |  Per-process   |  maqao lprof -dl -dp xp=/home/tfeil/Bureau/IATIC4/S8/AOA/proj  #
+#  Loops      |  Per-thread    |  maqao lprof -dl -dt xp=/home/tfeil/Bureau/IATIC4/S8/AOA/proj  #
+#################################################################################################
+

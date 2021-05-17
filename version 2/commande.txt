@@ -1,0 +1,10 @@
+./maqao.intel64.2.12.0/maqao.intel64 oneview -R1 -c=config.lua -xp=maqoaTest
+chromium /home/tfeil/Bureau/IATIC4/S8/AOA/projet/maqoaTest/RESULTS//baseline_one_html/index.html
+
+ 
+ 1646  gcc -Wall -g -O3  -o out driver.c  
+
+ ./out 30000 100 300
+
+
+

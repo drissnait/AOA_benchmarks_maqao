@@ -1,0 +1,49 @@
+********************************************************************************
+
+MAQAO 2.12.0 - 0597352531e99b23a212d512422aed33d7be3e4f::20201203-142304 || 2020/12/03
+
+./maqao.intel64.2.12.0/maqao.intel64 oneview -R1 -c=config.lua -xp=maqoaTest 
+
+Info: OMP_NUM_THREADS not set, it will be considered as equal to 1
+Warning: profile_start is set to remove 30% of the application but is ignored by current report.
+To force the profiler to not analyze a part of the code, use profile_start unit "s" with time in seconds as value
+or insert LPROF probes in your application sources and recompile. More data about LPROF probes are available
+using command maqao oneview --help-lprof-probes
+
+CMD:  OMP_NUM_THREADS=1   /home/tfeil/Bureau/IATIC4/S8/AOA/projet/./maqao.intel64.2.12.0/maqao.intel64 lprof  --xp=/home/tfeil/Bureau/IATIC4/S8/AOA/projet/maqoaTest/lprof_npsu/ --mpi-command=""   -- /home/tfeil/Bureau/IATIC4/S8/AOA/projet/maqoaTest/binary 30000 100 300
+********************************************************************************
+
+MAQAO 2.12.0 - 0597352531e99b23a212d512422aed33d7be3e4f::20201203-142304 || 2020/12/03
+
+./maqao.intel64.2.12.0/maqao.intel64 oneview -R1 -c=config.lua -xp=maqoaTest 
+
+Info: OMP_NUM_THREADS not set, it will be considered as equal to 1
+Warning: profile_start is set to remove 30% of the application but is ignored by current report.
+To force the profiler to not analyze a part of the code, use profile_start unit "s" with time in seconds as value
+or insert LPROF probes in your application sources and recompile. More data about LPROF probes are available
+using command maqao oneview --help-lprof-probes
+
+********************************************************************************
+
+MAQAO 2.12.0 - 0597352531e99b23a212d512422aed33d7be3e4f::20201203-142304 || 2020/12/03
+
+./maqao.intel64.2.12.0/maqao.intel64 oneview -R1 -c=config.lua -xp=maqoaTest 
+
+Info: OMP_NUM_THREADS not set, it will be considered as equal to 1
+Warning: profile_start is set to remove 30% of the application but is ignored by current report.
+To force the profiler to not analyze a part of the code, use profile_start unit "s" with time in seconds as value
+or insert LPROF probes in your application sources and recompile. More data about LPROF probes are available
+using command maqao oneview --help-lprof-probes
+
+********************************************************************************
+
+MAQAO 2.12.0 - 0597352531e99b23a212d512422aed33d7be3e4f::20201203-142304 || 2020/12/03
+
+./maqao.intel64.2.12.0/maqao.intel64 oneview -R1 -c=config.lua -xp=maqoaTest 
+
+Info: OMP_NUM_THREADS not set, it will be considered as equal to 1
+Warning: profile_start is set to remove 30% of the application but is ignored by current report.
+To force the profiler to not analyze a part of the code, use profile_start unit "s" with time in seconds as value
+or insert LPROF probes in your application sources and recompile. More data about LPROF probes are available
+using command maqao oneview --help-lprof-probes
+
